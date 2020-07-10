@@ -131,10 +131,10 @@ spec:
 ---
 ```
 ```
-### root@vishnu:/vv/prom# ``` kubectl apply -f prometheus.yml --validate=false```
-### service/prom-svc created
-### persistentvolumeclaim/prom-vol created
-### configmap/prom-config created
-### deployment.apps/prom-deploy created
+root@vishnu:/vv/prom# kubectl apply -f prometheus.yml --validate=false
+service/prom-svc created
+persistentvolumeclaim/prom-vol created
+configmap/prom-config created
+deployment.apps/prom-deploy created
+root@vishnu:/vv/prom# 
 ```
-k
