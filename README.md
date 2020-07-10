@@ -130,6 +130,8 @@ spec:
           
 ---
 ```
+## create Infrastructure for prometheus ,so we launch the yml file 
+#### you can use Kustomization File luanch the Infrastructure 
 ```
 root@vishnu:/vv/prom# kubectl apply -f prometheus.yml --validate=false
 service/prom-svc created
@@ -138,6 +140,34 @@ configmap/prom-config created
 deployment.apps/prom-deploy created
 root@vishnu:/vv/prom# 
 ```
+## After  creating Infrastructure
+```
+root@vishnu:/vv/prom# kubectl get all
+NAME                               READY   STATUS    RESTARTS   AGE
+pod/prom-deploy-59d7875d77-m5fz5   1/1     Running   0          16m
+
+NAME                 TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          22m
+service/prom-svc     NodePort    10.107.90.133   <none>        9090:32402/TCP   16m
+
+NAME                          READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/prom-deploy   1/1     1            1           16m
+
+NAME                                     DESIRED   CURRENT   READY   AGE
+replicaset.apps/prom-deploy-59d7875d77   1         1         1       16m
+
+--------------------------
+
+root@vishnu:/vv/prom# kubectl get pvc
+NAME       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+prom-vol   Bound    pvc-a5ab653d-d283-4480-a340-c3f9cbd1beeb   3Gi        RWO            standard       23m
+
+---------------------------------
+root@vishnu:/vv/prom# kubectl get pv
+NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM              STORAGECLASS   REASON   AGE
+pvc-a5ab653d-d283-4480-a340-c3f9cbd1beeb   3Gi        RWO            Delete           Bound    default/prom-vol   standard                23m
+```
+
 ### When i run kubectl apply command without  --validate=false then it give some validation error so i use --validate=false
 
 ## Create a Service for Grafana
@@ -213,4 +243,35 @@ spec:
           persistentVolumeClaim: 
             claimName: grafana-pvc
 
+```
+## create Infrastructure for grafana ,so we launch the yml file 
+
+```
+root@vishnu:/vv/grafana# kubectl apply -f grafana.yml --validate=false
+service/grafana-svc created
+persistentvolumeclaim/grafana-pvc created
+deployment.apps/grafana-deploy created
+root@vishnu:/vv/grafana# 
+
+```
+## After Infrastructure creation
+```
+root@vishnu:/vv/grafana# kubectl get all
+NAME                                  READY   STATUS    RESTARTS   AGE
+pod/grafana-deploy-649dbc9cd6-7x6md   1/1     Running   0          3m30s
+pod/prom-deploy-59d7875d77-m5fz5      1/1     Running   0          29m
+
+NAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/grafana-svc   NodePort    10.106.163.97   <none>        3000:30546/TCP   3m30s
+service/kubernetes    ClusterIP   10.96.0.1       <none>        443/TCP          35m
+service/prom-svc      NodePort    10.107.90.133   <none>        9090:32402/TCP   29m
+
+NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/grafana-deploy   1/1     1            1           3m30s
+deployment.apps/prom-deploy      1/1     1            1           29m
+
+NAME                                        DESIRED   CURRENT   READY   AGE
+replicaset.apps/grafana-deploy-649dbc9cd6   1         1         1       3m30s
+replicaset.apps/prom-deploy-59d7875d77      1         1         1       29m
+root@vishnu:/vv/grafana# 
 ```
