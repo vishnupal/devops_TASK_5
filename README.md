@@ -1,4 +1,4 @@
-![](https://logz.io/wp-content/uploads/2017/03/monitoring-prometheus-with-grafana.jpg)
+![](https://aptira.com/wp-content/uploads/2019/05/aptira_grafana_prometheus_training.png)
 # Monitoring using Prometheus and Grafana
 ### Monitoring is a necessity in today’s world.
 ### Here i use Prometheus and Grafana for monitoring our system. Prometheus use for store the metrics and  Grafana is represent in vitual 
