@@ -13,7 +13,7 @@
 
 ### so here push my docker images of Prometheus and Grafana on top of my docker hub account
 
-## Create a Service \
+## Create a Service for Prometheus
 ### by default prometheus use port 9090 , so we expose it using service ,so public can access this prometheus 
 ```
 --- 
@@ -34,7 +34,7 @@ spec:
 ---
 ```
 
-## Create a PersistentVolumeClaim
+## Create a PersistentVolumeClaim for Prometheus
 ```
 ---
 apiVersion: v1
@@ -53,7 +53,7 @@ spec:
  ```
  ### here i create a PVC it is Dynamically ceate a PV for us so we don't have create pv manually
  ### i am create single file for creating all resoures for k8s deployment by separet by --- otherwise some time faild to deploy 
-## ConfigMap
+## ConfigMap for Prometheus
 
 ### A ConfigMap is an API object that lets you store configuration for other objects to use. Unlike most Kubernetes objects that have a spec , a ConfigMap has a ### data section to store items (keys) and their values. The name of a ConfigMap must be a valid DNS subdomain name.
 ### Using the configmap different ways ,that you can use a ConfigMap to configure a container inside a Pod
@@ -137,4 +137,80 @@ persistentvolumeclaim/prom-vol created
 configmap/prom-config created
 deployment.apps/prom-deploy created
 root@vishnu:/vv/prom# 
+```
+### When i run kubectl apply command without  --validate=false then it give some validation error so i use --validate=false
+
+## Create a Service for Grafana
+### by default Grafana use port 3000 , so we expose it using service ,so public can access this prometheus 
+### for creating service for Grafana is same as Prometheus service
+```
+apiVersion: v1
+kind: Service
+metadata: 
+  labels: 
+    app: graf
+  name: grafana-svc
+spec: 
+  ports: 
+    -
+      port: 3000
+  selector: 
+    app: graf
+  type: NodePort
+  ```
+
+## Create a PersistentVolumeClaim for Grafana
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  lables:
+    app: graf
+  name: grafana-pvc
+spec: 
+  accessModes: 
+    - ReadWriteOnce
+  resources: 
+    requests: 
+      storage: 2Gi
+```
+## Create Deployment for  Prometheus 
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  labels: 
+    app: graf
+  name: grafana-deploy
+spec: 
+
+  selector: 
+    matchLabels: 
+      app: graf
+  strategy: 
+    type: Recreate
+  template: 
+    metadata: 
+      labels: 
+        app: graf
+      name: grafana-deploy
+    spec: 
+      containers: 
+        - 
+          image: 9057508163/grafana
+          name: graf
+          ports: 
+            - 
+              containerPort: 3000
+          volumeMounts: 
+            - 
+              mountPath: /var/lib/grafana
+              name: grafana-vol
+      volumes: 
+        - 
+          name: grafana-vol
+          persistentVolumeClaim: 
+            claimName: grafana-pvc
+
 ```
