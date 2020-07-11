@@ -170,7 +170,7 @@ pvc-a5ab653d-d283-4480-a340-c3f9cbd1beeb   3Gi        RWO            Delete     
 ```
 
 ### When i run kubectl apply command without  --validate=false then it give some validation error so i use --validate=false
-
+![prom](prom.jpg)
 ## Create a Service for Grafana
 ### by default Grafana use port 3000 , so we expose it using service ,so public can access this prometheus 
 ### for creating service for Grafana is same as Prometheus service
@@ -276,3 +276,5 @@ replicaset.apps/grafana-deploy-649dbc9cd6   1         1         1       3m30s
 replicaset.apps/prom-deploy-59d7875d77      1         1         1       29m
 root@vishnu:/vv/grafana# 
 ```
+![grafana](grafana_login.jpg)
+![grafana_1](grafana_page.jpg)
